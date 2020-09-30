@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BlogPost{% endblock %}
+
+{% block body %}
+    <h1>BlogPost</h1>
+ {% for category in blog_post.categories %}
+           
+        <a href="{{ path('category_show', {'id': category.id}) }}"><h3>{{ category.title }}</h3> </a>
+{% endfor %}
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ blog_post.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ blog_post.title }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ blog_post.content }}</td>
+            </tr>
+            <tr>
+                <th>Banner</th>
+           <td> <img class="imageNavBar" alt="My tiny image" title="Image" src="{{imageGetter}}/{{blog_post.banner}}"></td>
+
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td><a href="{{ path('user_show', {'id': blog_post.author.id}) }}">{{ blog_post.author }}</a></td>
+            </tr>
+            <tr>
+                <th>PublicationDate</th>
+                <td>{{ blog_post.publicationDate ? blog_post.publicationDate|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+<div class="container_messages">
+    <h3>Messages :</h3>
+    {% for commentaire in blog_post.commentaires |slice(0, 30) %}
+    <h6> Pseudo : {{ commentaire.pseudo}} </h6>
+    <div class="message">
+        <p>{{ commentaire.content|nl2br }}</p>
+    </div>
+     {% if is_granted('ROLE_ADMIN') or app.user.username  == blog_post.author %}
+<a href="{{ path('commentaire_delete', {'id': commentaire.id}) }}">Delete</a>
+  {% endif %}
+    <hr>
+    
+    {% endfor %}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ button_label|default('Enregistrer') }}</button>
+    {{ form_end(form) }}
+    </div>
+    <a href="{{ path('blog_post_index') }}">back to list</a>
+
+    <a href="{{ path('blog_post_edit', {'id': blog_post.id}) }}">edit</a>
+
+    {{ include('blog_post/_delete_form.html.twig') }}
+{% endblock %}

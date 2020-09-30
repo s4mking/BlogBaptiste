@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Category{% endblock %}
+
+{% block body %}
+    <h1>Category</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ category.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ category.Title }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('category_index') }}">back to list</a>
+
+    <a href="{{ path('category_edit', {'id': category.id}) }}">edit</a>
+<div class="container_messages">
+    <h3>Blogposts :</h3>
+    {% for article in category.getPosts() %}
+    <div class="message">
+        <p>{{ article.content|nl2br }}</p>
+    </div>
+    <hr>
+    
+    {% endfor %}
+    {# {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ button_label|default('Enregistrer') }}</button>
+    {{ form_end(form) }}
+    </div> #}
+    {{ include('category/_delete_form.html.twig') }}
+{% endblock %}
